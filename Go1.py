@@ -1,4 +1,4 @@
-#!/User/bin/python3
+#!/usr/bin/python3
 # Set the path to your python3 above
 
 # Set up relative path for util; sys.path[0] is directory of current program
@@ -8,7 +8,7 @@ sys.path.append(utilpath)
 
 from gtp_connection_go1 import GtpConnectionGo1
 from board_util import GoBoardUtil
-from myboard import SimpleGoBoard
+from simple_board import SimpleGoBoard
 
 class Go1():
     def __init__(self):
@@ -25,6 +25,8 @@ class Go1():
         """
         self.name = "Go1"
         self.version = 0.1
+
+
     def get_move(self,board, color):
         return GoBoardUtil.generate_random_move(board,color,True)
     
