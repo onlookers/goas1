@@ -43,9 +43,9 @@ class GtpConnectionGo1(gtp_connection.GtpConnection):
         # Add the white/black stones on the board to white/black score first
 
         whiteScore = np.sum(self.board.board == WHITE)
-        self.respond("init" +str(whiteScore))
+        self.respond("init White" +str(whiteScore))
         blackScore = np.sum(self.board.board == BLACK)
-        self.respond("init" +str(blackScore))
+        self.respond("init Black" +str(blackScore))
 
 
 
@@ -59,10 +59,15 @@ class GtpConnectionGo1(gtp_connection.GtpConnection):
                 blackScore += 1
             elif result == WHITE:
                 whiteScore += 1
+        self.respond("eyeish added White" +str(whiteScore))
+        self.respond("eyeish added Black" +str(blackScore))
         #Add komi to white score and passes to white/black score
         whiteScore += self.komi
         whiteScore -= self.board.passes_white
         blackScore -= self.board.passes_black
+
+        self.respond("komi/pass added White" +str(whiteScore))
+        self.respond("komi/pass added Black" +str(blackScore))
 
         if blackScore > whiteScore:
             WinnerScore = blackScore - whiteScore
