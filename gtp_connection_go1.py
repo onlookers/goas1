@@ -7,9 +7,6 @@ by Isaac Henrion and Aamos Storkey at the University of Edinburgh.
 import traceback
 import sys
 import os
-utilpath = sys.path[0] + "/../util/"
-sys.path.append(utilpath)
-
 from board_util import GoBoardUtil, BLACK, WHITE, EMPTY, BORDER, FLOODFILL
 import gtp_connection
 import numpy as np
@@ -34,48 +31,66 @@ class GtpConnectionGo1(gtp_connection.GtpConnection):
         self.commands["hello"] = self.hello_cmd
         self.commands["score"] = self.score_cmd
 
-
     def hello_cmd(self, args):
         """ Dummy Hello Command """
         self.respond("Hello! " + self.go_engine.name)
 
-    def score_cmd(self,args):
-        # Add the white/black stones on the board to white/black score first
+    def score_cmd(self, args):
+        whiteScore = self.komi
+        blackScore = 0
 
-        whiteScore = np.sum(self.board.board == WHITE)
-        self.respond("init White" +str(whiteScore))
-        blackScore = np.sum(self.board.board == BLACK)
-        self.respond("init Black" +str(blackScore))
+        fboard = self.board.copy().board
 
-
-
-        #Add the score of white/black by counting the empty owned by black/white stone
-
-        empties = list(*np.where(self.board.board == EMPTY))
-        for empty in empties:
-            # using _is_eyeish(empty) to figure out the empties are white or black points
-            result = self.board._is_eyeish(empty)
-            if result == BLACK:
-                blackScore += 1
-            elif result == WHITE:
+        # Count all stones for players
+        for point in fboard:
+            if point == WHITE:
                 whiteScore += 1
-        self.respond("eyeish added White" +str(whiteScore))
-        self.respond("eyeish added Black" +str(blackScore))
-        #Add komi to white score and passes to white/black score
-        whiteScore += self.komi
-        whiteScore -= self.board.passes_white
-        blackScore -= self.board.passes_black
+            elif point == BLACK:
+                blackScore += 1
 
-        self.respond("komi/pass added White" +str(whiteScore))
-        self.respond("komi/pass added Black" +str(blackScore))
+        # Count territories
+        for point in range(len(fboard)):
+            if fboard[point]== EMPTY:
+                pointStack = [point]
+                territory = [point]
+                fboard[point] = FLOODFILL
+                while pointStack:
+                    currentPoint = pointStack.pop()
+                    neighbors = self.board._neighbors(currentPoint)
+                    for n in neighbors :
+                        if fboard[n] == EMPTY:
+                            fboard[n] = FLOODFILL
+                            pointStack.append(n)
+                            territory.append(n)
 
-        if blackScore > whiteScore:
-            WinnerScore = blackScore - whiteScore
-            self.respond("B\+" + str(WinnerScore))
+                belongsTo = None
+                changed = False
+                for t in territory:
+                    neighbors = self.board._neighbors(t)
+                    for n in neighbors:
+                        if fboard[n] in [WHITE, BLACK]:
+                            if belongsTo == None:
+                                belongsTo = fboard[n]
+                            elif belongsTo != fboard[n]:
+                                changed = True
+                                break
+                    if changed:
+                        break
+                    
+                if not changed:
+                    if belongsTo == BLACK:
+                        blackScore += len(territory)
+                    elif belongsTo == WHITE:
+                        whiteScore += len(territory)
 
-        elif blackScore < whiteScore:
-            WinnerScore = whiteScore - blackScore
-            self.respond("W\+" + str(WinnerScore))
+                
+        
+        # Output result
+        win = abs(whiteScore - blackScore)
+        if whiteScore > blackScore:
+            self.respond("W+" + str(win))
+        elif whiteScore < blackScore:
+            self.respond("B+" + str(win))
         else:
-            self.respond("drawn")
+            self.respond(str(win))
 

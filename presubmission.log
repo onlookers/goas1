@@ -1,0 +1,20 @@
+Script started on Mon Jan 29 07:56:19 2018
+[?1034hbash-3.2$ cd[Kp a1.tgz ~/Desktop/496/assignment/[K[K[K[K[K[K[K[K[K[K[Ksubmission/;\[K[Kpresubmission
+bash-3.2$ cd presubmission
+bash-3.2$ tar -xfz[K[Kvz[Kf a1.tgz 
+x ./._assignment1
+x assignment1/
+x assignment1/._assignment1-public-tests.gtp
+x assignment1/assignment1-public-tests.gtp
+x assignment1/._Go1.py
+x assignment1/Go1.py
+x assignment1/._gtp_connection_go1.py
+x assignment1/gtp_connection_go1.py
+x assignment1/._gtp_log
+x assignment1/gtp_log
+bash-3.2$ cd assignment1/
+bash-3.2$ cd assignment1/[C[C[C[C[C[C[C[C[C[Ctar -xvf a1.tgz [C[C[C[C[C[C[C[C[C[Ccd presubmission[C[C[C[C[C[C[C[C[C[C[Cp a1.tgz ~/Desktop/496/submission/presubmission[C[C[C[C[C[C[C[C[C[Cexit[Ktar -xf a1.tgz [2@vz[C[C[C[C[C[C[C[C[C[Kunzip a1.tgz rar[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Ccp a1.tgz ~/Desktop/496/submission/presubmission/[C[C[C[C[C[C[C[C[C[C[Cd submission/[K[C[C[C[C[C[C[C[C[C[Cls[Kcd 496/~/Desktop/[C[C[C[C[C[C[C[C[C[Cexit[K[2Plscd ~/Desktop/[C[C[C[C[C[C[C[C[C[Cexit[Kquitgogui-regress ./Go1.py  assignment1-public-tests.gtp 
+bash-3.2$ exit
+exit
+
+Script done on Mon Jan 29 08:02:08 2018
